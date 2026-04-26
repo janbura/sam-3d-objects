@@ -1,0 +1,57 @@
+#!/bin/bash
+#SBATCH --partition=gpu_a100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_inference
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=9
+#SBATCH --mem=64G
+#SBATCH --time=00:45:00
+#SBATCH --output=logs/sam_inference_%j.out
+
+set -eo pipefail
+
+source "$HOME/sam-3d-objects/paths.env"
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || true
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate "${SAM3D_CONDA_ENVS}/${SAM3D_ENV_NAME}"
+
+cd "${SAM3D_REPO}"
+
+echo "=== GPU sanity ==="
+nvidia-smi
+python -c "import torch; print('CUDA:', torch.cuda.is_available(), '/', torch.cuda.get_device_name(0))"
+
+# Confirm checkpoints accessible
+test -f checkpoints/hf/pipeline.yaml || { echo "ERROR: checkpoints/hf/pipeline.yaml missing"; exit 1; }
+
+# Read HF token in case demo.py downloads MoGe depth model on first run
+if [ -f "$HOME/.hf_token" ]; then
+  export HF_TOKEN="$(cat $HOME/.hf_token)"
+fi
+
+mkdir -p outputs/run_a outputs/run_b
+
+echo "=== Inference run A ==="
+time python demo.py
+mv splat.ply outputs/run_a/splat.ply
+
+echo "=== Inference run B (determinism check, same seed) ==="
+time python demo.py
+mv splat.ply outputs/run_b/splat.ply
+
+echo "=== md5sum comparison ==="
+md5sum outputs/run_a/splat.ply outputs/run_b/splat.ply
+if diff -q outputs/run_a/splat.ply outputs/run_b/splat.ply > /dev/null; then
+  echo "DETERMINISM: outputs are byte-identical"
+else
+  echo "DETERMINISM: outputs DIFFER -- investigate (cuDNN nondeterminism, RNG seeding)"
+fi
+
+ls -lh outputs/run_a outputs/run_b
+
+echo "=== 04_run_inference DONE ==="

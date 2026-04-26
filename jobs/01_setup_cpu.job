@@ -1,0 +1,53 @@
+#!/bin/bash
+#SBATCH --partition=rome
+#SBATCH --job-name=sam_setup_cpu
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+#SBATCH --output=logs/sam_setup_cpu_%j.out
+
+set -eo pipefail
+
+# Load shared paths
+source "$HOME/sam-3d-objects/paths.env"
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+
+# Make sure scratch dir for envs exists
+mkdir -p "${SAM3D_CONDA_ENVS}"
+
+cd "${SAM3D_REPO}"
+
+ENV_PREFIX="${SAM3D_CONDA_ENVS}/${SAM3D_ENV_NAME}"
+
+# Idempotent env creation by full prefix path
+if [ ! -d "$ENV_PREFIX" ]; then
+  echo "Creating conda env at $ENV_PREFIX"
+  conda env create -f environments/default.yml -p "$ENV_PREFIX"
+else
+  echo "Env $ENV_PREFIX already exists, skipping create"
+fi
+
+conda activate "$ENV_PREFIX"
+
+echo "=== Python check ==="
+python -c "import sys; print('Python:', sys.version)"
+
+# OFFICIAL doc/setup.md: dual index for both NVIDIA NGC and PyTorch CUDA 12.1
+export PIP_EXTRA_INDEX_URL="https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121"
+
+echo "=== pip install -e .[dev] ==="
+pip install -e '.[dev]'
+
+echo "=== pip install -e .[p3d] ==="
+pip install -e '.[p3d]'
+
+echo "=== Torch check ==="
+python -c "import torch; print('Torch:', torch.__version__, 'CUDA build:', torch.version.cuda)"
+
+echo "=== 01_setup_cpu DONE ==="

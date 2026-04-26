@@ -1,1 +1,18 @@
+# Python
 __pycache__
+*.pyc
+
+# Local config (NEVER commit)
+paths.env
+.hf_token
+
+# Job logs
+logs/
+*.out
+*.err
+
+# Generated outputs
+checkpoints/hf/
+checkpoints/hf-download/
+splat*.ply
+outputs/

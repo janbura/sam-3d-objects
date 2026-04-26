@@ -1,0 +1,50 @@
+#!/bin/bash
+#SBATCH --partition=rome
+#SBATCH --job-name=sam_download
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=02:00:00
+#SBATCH --output=logs/sam_download_%j.out
+
+set -eo pipefail
+
+source "$HOME/sam-3d-objects/paths.env"
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate "${SAM3D_CONDA_ENVS}/${SAM3D_ENV_NAME}"
+
+# Read token from secured file (NOT inline, NOT in git)
+if [ ! -f "$HOME/.hf_token" ]; then
+  echo "ERROR: $HOME/.hf_token not found"
+  exit 1
+fi
+export HF_TOKEN="$(cat $HOME/.hf_token)"
+
+# Ensure newer huggingface-hub with 'hf' command is available
+pip install 'huggingface-hub[cli]<1.0' --upgrade
+
+mkdir -p "${SAM3D_CHECKPOINTS}"
+cd "${SAM3D_CHECKPOINTS}"
+
+TAG=hf
+hf download \
+  --repo-type model \
+  --local-dir "${TAG}-download" \
+  --max-workers 1 \
+  facebook/sam-3d-objects
+
+mv "${TAG}-download/checkpoints" "${TAG}"
+rm -rf "${TAG}-download"
+
+# Symlink into the repo so demo.py finds checkpoints at expected path
+ln -sfn "${SAM3D_CHECKPOINTS}/${TAG}" "${SAM3D_REPO}/checkpoints/${TAG}"
+
+echo "=== Checkpoint files ==="
+ls -lh "${SAM3D_CHECKPOINTS}/${TAG}"
+
+echo "=== 02_download_checkpoints DONE ==="
