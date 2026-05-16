@@ -216,6 +216,14 @@ class FlowMatching(Base):
             *args_conditionals,
             **kwargs_conditionals,
         ):
+
+            if isinstance(x_t, dict) and "shape" in x_t:
+                if step_idx == 0:
+                    print("[SAM3D GUIDANCE TEST] shape mean before:", x_t["shape"].mean().item())
+                x_t["shape"] = x_t["shape"] + 0.0
+                if step_idx == 0:
+                    print("[SAM3D GUIDANCE TEST] shape mean after:", x_t["shape"].mean().item())
+
             yield t, x_t, ()
 
     def _generate_dynamics(

@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=sam3d
+#SBATCH --partition=gpu_h100
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --time=00:02:00
+#SBATCH --output=out_%j.log
+
+source ~/.bashrc
+source ~/mambaforge/etc/profile.d/conda.sh   # <-- critical
+
+conda activate sam3d
+
+which python
+python -c "import sys; print(sys.executable)"
+
+cd ~/sam-3d-objects
+
+echo "Starting job"
+python demo.py

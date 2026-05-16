@@ -1,4 +1,5 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
+from .masked_sdpa import masked_sdpa
 from typing import *
 import torch
 import math
@@ -8,12 +9,10 @@ from .. import DEBUG, ATTN
 if ATTN == "xformers":
     import xformers.ops as xops
 elif ATTN == "flash_attn":
-    import flash_attn
+    ATTN = "sdpa"
+    from torch.nn.functional import scaled_dot_product_attention as sdpa
 elif ATTN == "sdpa":
     from torch.nn.functional import scaled_dot_product_attention as sdpa
-    from .masked_sdpa import masked_sdpa
-else:
-    raise ValueError(f"Unknown attention module: {ATTN}")
 
 
 __all__ = [

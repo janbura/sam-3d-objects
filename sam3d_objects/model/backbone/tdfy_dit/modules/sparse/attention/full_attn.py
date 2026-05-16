@@ -7,7 +7,9 @@ from .. import DEBUG, ATTN
 if ATTN == "xformers":
     import xformers.ops as xops
 elif ATTN == "flash_attn":
-    import flash_attn
+    # force fallback
+    ATTN = "sdpa"
+    from .masked_sdpa import masked_sdpa
 elif ATTN == "sdpa":
     from .masked_sdpa import masked_sdpa
 else:

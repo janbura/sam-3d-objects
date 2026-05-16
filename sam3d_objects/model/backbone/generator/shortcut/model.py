@@ -422,14 +422,51 @@ class ShortCut(FlowMatching):
         x_0 = self._generate_noise(x_shape, x_device)
         t_seq, d = self._prepare_t_and_d()
 
-        for x_t, t in self._solver.solve_iter(
+        for step_idx, (x_t, t) in enumerate(self._solver.solve_iter(
             self._generate_dynamics,
             x_0,
             t_seq,
             d,
             *args_conditionals,
             **kwargs_conditionals,
-        ):
+        )):
+            if not hasattr(self, "_sam3d_guidance_debug_printed"):
+                self._sam3d_guidance_debug_printed = True
+                print("[SAM3D DEBUG STAGE1] generator class:", self.__class__.__name__)
+                print("[SAM3D DEBUG STAGE1] step_idx:", step_idx)
+                print("[SAM3D DEBUG STAGE1] t:", t)
+                print("[SAM3D DEBUG STAGE1] d:", d)
+
+                if isinstance(x_t, torch.Tensor):
+                    print("[SAM3D DEBUG STAGE1] x_t type: Tensor")
+                    print("[SAM3D DEBUG STAGE1] x_t shape:", tuple(x_t.shape))
+                    print("[SAM3D DEBUG STAGE1] x_t dtype:", x_t.dtype)
+                    print("[SAM3D DEBUG STAGE1] x_t device:", x_t.device)
+                    print("[SAM3D DEBUG STAGE1] x_t requires_grad:", x_t.requires_grad)
+
+                elif isinstance(x_t, dict):
+                    print("[SAM3D DEBUG STAGE1] x_t type: dict")
+                    print("[SAM3D DEBUG STAGE1] x_t keys:", list(x_t.keys()))
+                    for k, v in x_t.items():
+                        if isinstance(v, torch.Tensor):
+                            print(
+                                f"[SAM3D DEBUG STAGE1] x_t[{k}] shape={tuple(v.shape)} "
+                                f"dtype={v.dtype} device={v.device} requires_grad={v.requires_grad}"
+                            )
+                        else:
+                            print(f"[SAM3D DEBUG STAGE1] x_t[{k}] type={type(v)}")
+                else:
+                    print("[SAM3D DEBUG STAGE1] x_t type:", type(x_t))
+
+            if isinstance(x_t, dict) and "shape" in x_t:
+                if step_idx == 0:
+                    print("[SAM3D GUIDANCE TEST] shape mean before:", x_t["shape"].mean().item())
+
+                x_t["shape"] = x_t["shape"] + 0.0
+
+                if step_idx == 0:
+                    print("[SAM3D GUIDANCE TEST] shape mean after:", x_t["shape"].mean().item())
+
             yield t, x_t, ()
 
     def _generate_dynamics(

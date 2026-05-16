@@ -670,7 +670,11 @@ class InferencePipeline:
             ss_generator.reverse_fn.strength_pm,
         )
 
-        with torch.no_grad():
+        _guided_solver = getattr(self, 'guided_solver', None)
+        if _guided_solver is not None:
+            ss_generator._solver = _guided_solver
+        _grad_ctx = torch.enable_grad() if _guided_solver is not None else torch.no_grad()
+        with _grad_ctx:
             with torch.autocast(device_type="cuda", dtype=self.shape_model_dtype):
                 if self.is_mm_dit():
                     latent_shape_dict = {

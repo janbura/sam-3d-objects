@@ -1,0 +1,10 @@
+/var/spool/slurm/slurmd/job22397136/slurm_script: line 11: /home/scur0835/mambaforge/etc/profile.d/conda.sh: No such file or directory
+/home/scur0835/anaconda3/envs/sam3d/bin/python
+/home/scur0835/anaconda3/envs/sam3d/bin/python
+Starting job
+Traceback (most recent call last):
+  File "/gpfs/home4/scur0835/sam-3d-objects/demo.py", line 6, in <module>
+    from inference import Inference, load_image, load_single_mask
+  File "/gpfs/home4/scur0835/sam-3d-objects/notebook/inference.py", line 10, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
