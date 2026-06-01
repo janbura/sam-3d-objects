@@ -399,6 +399,8 @@ class InferencePipelinePointMap(InferencePipeline):
         pointmap=None,
         decode_formats=None,
         estimate_plane=False,
+        steps_prefix: str = None,
+        guidance=None,
     ) -> dict:
         image = self.merge_image_and_mask(image, mask)
         with self.device: 
@@ -421,6 +423,9 @@ class InferencePipelinePointMap(InferencePipeline):
                 ss_input_dict,
                 inference_steps=stage1_inference_steps,
                 use_distillation=use_stage1_distillation,
+                intrinsics=pointmap_dict["intrinsics"],
+                steps_prefix=steps_prefix,
+                guidance=guidance,
             )
 
             # We could probably use the decoder from the models themselves
@@ -506,6 +511,7 @@ class InferencePipelinePointMap(InferencePipeline):
                 **outputs,
                 "pointmap": pts.cpu().permute((1, 2, 0)),  # HxWx3
                 "pointmap_colors": pts_colors.cpu().permute((1, 2, 0)),  # HxWx3
+                "intrinsics": pointmap_dict["intrinsics"],
             }
 
     @staticmethod
