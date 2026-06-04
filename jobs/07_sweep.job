@@ -23,9 +23,12 @@ export LIDRA_SKIP_INIT=1
 
 mkdir -p logs
 
-# depth/normal first (cheap ~25s/inst), ss last (heavy ~150s/inst), pose last (2x heavy)
-# sweep.py skips already-done instances — safe to resubmit if timeout
-CONFIGS="depth_2.0 depth_5.0 normal_2.0 normal_5.0 ss_2.0 ss_5.0 ss_10.0 pose_0.05 pose_0.2"
+# cheap (depth/normal ~25s/inst) first, then ss (~108s/inst), pose last (~174s/inst, 2 backward passes)
+# sweep.py skips already-done instances — safe to resubmit if job times out
+CONFIGS="depth_1.0 depth_5.0 depth_10.0 \
+         normal_1.0 normal_5.0 normal_10.0 \
+         ss_1.0 ss_5.0 ss_10.0 \
+         pose_0.01 pose_0.05 pose_0.2"
 
 echo "=== GPU ==="
 nvidia-smi
@@ -36,12 +39,6 @@ echo "=== Guidance sweep on 85-instance stratified dev set ==="
 echo "Configs: $CONFIGS"
 echo ""
 time python scripts/sweep.py --instances misc/tune_85.txt --configs $CONFIGS --seed 42
-
-echo ""
-echo "=== Eval: CD + mask IoU across all configs ==="
-python scripts/eval_sweep.py \
-    --instances misc/tune_85.txt \
-    --device cuda
 
 echo ""
 echo "=== 07_sweep_tune85 DONE ==="

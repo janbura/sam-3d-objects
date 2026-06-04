@@ -1,87 +1,87 @@
-# Stratified CD sample: 5 bins x 17 = 85 instances
+# Stratified CD sample: 5 bins x 17 = 85 instances  require-depth=True
 # Source: outputs/baseline_all/results_multi_init.csv  seed=42
-handbag/3f87180006cf0e68
-bed/2334050
-cell phone/COCO_val2014_000000056455
-couch/COCO_train2014_000000104999
-chair/6109887ac68c7ef5
-dining table/0ba0523b868151f2
-handbag/2334795
-banana/COCO_train2014_000000349750
+frisbee/COCO_train2014_000000381544
+handbag/2352984
+suitcase/2352556
+sandwich/2322156
+cup/HICO_train2015_00007743
 sandwich/COCO_train2014_000000089052
-suitcase/HICO_train2015_00010580
-chair/a02ecec4a6dea7f9
+chair/820c45174e0fbae8
+bed/2322371
+tennis racket/COCO_val2014_000000502776
 baseball glove/COCO_train2014_000000338501
-bottle/HICO_train2015_00008112
-toilet/HICO_train2015_00004350
-suitcase/HICO_train2015_00001725
-bench/0de4849e3c830c69
-donut/HICO_train2015_00010947
-couch/COCO_train2014_000000238502_0
-chair/2399085
-keyboard/HICO_train2015_00005377
-backpack/e90c1a3c2308157b
-couch/3ca9ba58bbea604c
-bench/HICO_train2015_00007713
-helmet/helmet
-bench/HICO_train2015_00008864
-chair/6ed533906c41e814
-donut/2341283
-chair/8ef15101f3dbf3d7
-sandwich/2409913
-handbag/dbbd8197cb0b44a8
-chair/58578d3fab10d321
-cell phone/COCO_val2014_000000522637
+chair/HICO_train2015_00012508
+toilet/HICO_train2015_00010023
+pipage/drinking_174
+bed/40b6674bd8f245a0
+bed/2383873
+sports ball/73ed398151cda1a4
+cake/HICO_train2015_00010188
+cake/HICO_train2015_00007421
+frisbee/HICO_train2015_00007885
+wine glass/HICO_train2015_00005834
+cup/COCO_train2014_000000386261
+chair/3f9e730a9808a172
+oven/oven
+book/COCO_train2014_000000416549_3
+pizza/HICO_train2015_00000530
+tennis racket/HICO_train2015_00005389
+laptop/COCO_train2014_000000276006_1
+cake/COCO_val2014_000000403975
+bench/2363262
+teddy bear/2405822
+sports ball/2f9a85f381508472
+chair/8f42f1a3c44c02ed
+tennis racket/2410056
 chair/43924536c8dbd656
-bed/2349094
-handbag/2364992
-sports ball/10845c2b9d258228
-bed/2385281
-wine glass/83a19568862a8e1c
-wine glass/2380004
-chair/COCO_val2014_000000054091
-skis/COCO_train2014_000000576468
-bench/HICO_train2015_00008604
-banana/2351866
-sports ball/HICO_train2015_00004279
-donut/2347079
-chair/2398495
-banana/2368969
-chair/15ee420b88562216
-hair drier/HICO_train2015_00007756
-cup/COCO_val2014_000000413044
-bottle/9622895cf55de41f
-banana/HICO_train2015_00009758
-fork/COCO_val2014_000000442348
+couch/d90bff351b3e9bc5
+chair/0fcecf1f570c235c
+pizza/2348589
+laptop/HICO_train2015_00000333
+spoon/HICO_train2015_00001618
+banana/2351073
+teddy bear/HICO_train2015_00003818
+bed/HICO_train2015_00004540
+knife/HICO_train2015_00012013
+tennis racket/COCO_val2014_000000580847
+laptop/2327416
+chair/930fe0c0173b449d
+tennis racket/2376944
+bench/2346244
+chair/479fd51f9986df58
+tennis racket/COCO_val2014_000000509867
+chair/COCO_val2014_000000106411_0
+chair/HICO_train2015_00008130
+spoon/COCO_train2014_000000522704_1
+bottle/7e5f5c2ea7701173
 chair/HICO_train2015_00004475
-fork/COCO_train2014_000000497915
-bowl/HICO_train2015_00009661
-chair/d07e15300dd41670
-bench/19d5fa0739b2a78f
-bench/2356628
-frisbee/COCO_train2014_000000045086
-bench/COCO_train2014_000000023927
-pizza/COCO_train2014_000000291752
+handbag/c7fb54c682cc0b56
+bench/2346668
+laptop/COCO_train2014_000000029140
+chair/2342597
+carrot/HICO_train2015_00010396
+umbrella/2372035
+wine glass/c8dfcf28c09243f7
+chair/COCO_val2014_000000480936_0
 chair/HICO_train2015_00003295
-umbrella/2327052
-bench/2377730
-chair/a233ffcf8d991e65
-bench/2344209
-laptop/COCO_train2014_000000316085
-bench/HICO_train2015_00003805
-dining table/9b8d8d635aff4024
-bottle/0cf8abda7f9a937c
-laptop/HICO_train2015_00006918
-umbrella/HICO_train2015_00003618
-bench/HICO_train2015_00012490
-tennis racket/2406861
-wine glass/HICO_train2015_00006398
-toothbrush/HICO_train2015_00005504
-wine glass/f245064dbcf9079b
-bench/HICO_train2015_00000573
-bench/HICO_train2015_00010380
-bottle/1fba46e17638a4e4
-toothbrush/HICO_train2015_00008642
+bottle/HICO_train2015_00003973
+chair/a6c30a4d4a745851
+clock/HICO_train2015_00012682
+chair/HICO_train2015_00005061
+wine glass/HICO_train2015_00009452
+skis/COCO_train2014_000000122586
+wine glass/938e3a8874a5e450
+carrot/1592359
+bottle/37799735520d22ba
+tennis racket/COCO_train2014_000000308967
+award/unveiling_59
+wine glass/ddc37b778ddd3fac
+bench/5792d3611ff6a388
+wine glass/2c0cc429dfadf246
+tie/2361096
+bottle/HICO_train2015_00000144
+sports ball/c911e76a5c126183
+wine glass/26bc714877db1ad5
 bottle/2355c3c90924c2f6
 toothbrush/2396872
 bench/2365422

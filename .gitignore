@@ -8,6 +8,7 @@ paths.env
 
 # Job logs
 logs/
+logs_*
 *.out
 *.err
 
@@ -17,6 +18,7 @@ checkpoints/hf-download/
 splat*.ply
 outputs/
 data
+outputs_*
 
 # Personal planning docs (not for the team fork)
 sam3d_evaluation_plan.md

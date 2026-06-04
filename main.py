@@ -31,7 +31,7 @@ def build_guidance(
 
     from guidance import CompositeGuidance, DepthGuidance, PoseGuidance, ShapeGuidance, NormalGuidance
 
-    debug_root = os.path.join("outputs", steps_prefix or "ss_steps", "guidance_debug")
+    debug_root = os.path.join("outputs", steps_prefix, "guidance_debug") if steps_prefix else None
     modules = []
 
     if ss_guidance_scale is not None and ss_guidance_scale > 0:
@@ -41,7 +41,7 @@ def build_guidance(
                 mask_path=mask_path,
                 shape_scale=ss_guidance_scale,
                 device="cpu",
-                debug_dir=os.path.join(debug_root, "shape"),
+                debug_dir=os.path.join(debug_root, "shape") if debug_root else None,
             )
         )
 
