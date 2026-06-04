@@ -173,6 +173,7 @@ def _render_soft_silhouette(
                 image_size=image_size,
                 blur_radius=np.log(1.0 / 1e-4 - 1.0) * blend.sigma,
                 faces_per_pixel=50,
+                bin_size=0,
             ),
         ),
         shader=SoftSilhouetteShader(blend_params=blend),
@@ -340,6 +341,7 @@ class ShapeGuidance(BaseGuidance):
         self.debug_dir = debug_dir
         self._step = 0
 
+        self.step_stats = []  # [(t_step, grad_norm), ...]
         self.gt_mask = _load_and_clean_mask(mask_path, image_size, min_blob_area)
         _, n_blobs = ndimage.label(self.gt_mask.numpy())
         print(
@@ -397,6 +399,7 @@ class ShapeGuidance(BaseGuidance):
             return {}
 
         (grad,) = torch.autograd.grad(loss, shape_lat)
+        self.step_stats.append((t_step, grad.norm().item()))
         print(
             f"  [shape] iou_loss={loss.item():.4f}  pred={pred_alpha.mean().item():.4f}"
         )
@@ -463,6 +466,7 @@ class PoseGuidance(BaseGuidance):
         self.start_t = start_t
         self.device = torch.device(device)
         self._step = 0
+        self.step_stats = []  # [(t_step, g_trans_norm, g_scale_norm), ...]
 
         self.gt_mask = _load_and_clean_mask(mask_path, image_size, min_blob_area)
         H, W = self.gt_mask.shape
@@ -527,6 +531,7 @@ class PoseGuidance(BaseGuidance):
 
         corrections = {}
         l_c = l_s = 0.0
+        g_trans_norm = g_scale_norm = 0.0
 
         if self.w_centroid > 0:
             lc = _loss_centroid(pred_alpha, self.gt_cx, self.gt_cy)
@@ -534,6 +539,7 @@ class PoseGuidance(BaseGuidance):
                 print(f"  [pose] t={t_step:.3f}  non-finite centroid loss — skipping")
                 return {}
             (g_trans,) = torch.autograd.grad(lc, trans_lat, retain_graph=True)
+            g_trans_norm = g_trans.norm().item()
             corrections["translation"] = _apply_correction(
                 x_t["translation"], g_trans, self.pose_scale, "translation"
             )
@@ -545,11 +551,13 @@ class PoseGuidance(BaseGuidance):
                 print(f"  [pose] t={t_step:.3f}  non-finite size loss — skipping")
                 return {}
             (g_scale,) = torch.autograd.grad(ls, scale_lat)
+            g_scale_norm = g_scale.norm().item()
             corrections["scale"] = _apply_correction(
                 x_t["scale"], g_scale, self.pose_scale, "pose_scale"
             )
             l_s = ls.item()
 
+        self.step_stats.append((t_step, g_trans_norm, g_scale_norm))
         print(f"  [pose] t={t_step:.3f}  centroid={l_c:.4f}  size={l_s:.4f}")
         self._step += 1
 
@@ -583,6 +591,7 @@ class DepthGuidance(BaseGuidance):
         self.image_size = image_size
         self.start_t = start_t
         self.device = torch.device(device)
+        self.step_stats = []  # [(t_step, grad_norm), ...]
 
         gt_depth = _load_gt_depth(depth_path, image_size)
         if mask_path is not None:
@@ -652,6 +661,7 @@ class DepthGuidance(BaseGuidance):
                 f"  [depth] t={t_step:.3f}  no overlap with masked GT depth — skipping"
             )
             return {}
+        self.step_stats.append((t_step, grad.norm().item()))
         print(f"  [depth] t={t_step:.3f}  loss={loss.item():.6f}")
 
         with torch.no_grad():
@@ -695,6 +705,7 @@ class NormalGuidance(BaseGuidance):
         self.image_size = image_size
         self.start_t = start_t
         self.device = torch.device(device)
+        self.step_stats = []  # [(t_step, grad_norm), ...]
 
         gt_depth = _load_gt_depth(depth_path, image_size)
 
@@ -892,6 +903,7 @@ class NormalGuidance(BaseGuidance):
                 f"no overlap — skipping"
             )
             return {}
+        self.step_stats.append((t_step, grad.norm().item()))
 
         print(
             f"  [normal] t={t_step:.3f}  "
@@ -938,6 +950,10 @@ class CompositeGuidance(BaseGuidance):
 
     def __init__(self, modules: list):
         self.modules = modules
+
+    def get_stats(self) -> dict:
+        """Return step_stats from each child module keyed by class name."""
+        return {type(m).__name__: m.step_stats for m in self.modules}
 
     def apply(
         self,

@@ -27,7 +27,7 @@ sys.path.insert(0, ROOT)
 sys.path.append(os.path.join(ROOT, "notebook"))
 from eval_single import chamfer, f_score, load_gt_points, normalize, seed_everything
 from evaluation.alignment import align_icp
-from guidance import _render_soft_silhouette
+from guidance import _extract_mesh, _render_soft_silhouette
 
 DATA        = "data/Open3DHOI/data"
 RENDER_SIZE = 256
@@ -93,15 +93,27 @@ def eval_cd(pred_dir, gt_obj_path, device):
 
 
 def eval_iou(pred_dir, gt_mask_path, device):
-    """Mask IoU: render predicted mesh silhouette vs GT obj_mask.png."""
-    pose_path = os.path.join(pred_dir, "pose_params.pt")
+    """Mask IoU: render predicted mesh silhouette vs GT obj_mask.png.
+    Uses final_step.pt (FlexiCubes solid mesh) when available, else pred_mesh.obj."""
+    pose_path       = os.path.join(pred_dir, "pose_params.pt")
+    final_step_path = os.path.join(pred_dir, "final_step.pt")
     if not os.path.exists(pose_path):
         return None, None
 
     pose = torch.load(pose_path, weights_only=False, map_location="cpu")
-    m    = trimesh.load(os.path.join(pred_dir, "pred_mesh.obj"), force="mesh")
-    verts = torch.tensor(np.array(m.vertices), dtype=torch.float32, device=device)
-    faces = torch.tensor(np.array(m.faces),    dtype=torch.int64,   device=device)
+
+    if os.path.exists(final_step_path):
+        data   = torch.load(final_step_path, weights_only=False, map_location="cpu")
+        result = _extract_mesh(data["ss_grid"], device)
+        if result is None:
+            return None, None
+        verts, faces = result
+        verts = verts.to(device)
+        faces = faces.to(device)
+    else:
+        m     = trimesh.load(os.path.join(pred_dir, "pred_mesh.obj"), force="mesh")
+        verts = torch.tensor(np.array(m.vertices), dtype=torch.float32, device=device)
+        faces = torch.tensor(np.array(m.faces),    dtype=torch.int64,   device=device)
 
     sil = _render_soft_silhouette(
         verts, faces,
@@ -114,7 +126,7 @@ def eval_iou(pred_dir, gt_mask_path, device):
     )
     gt = torch.tensor((gt_np > 127).astype(np.float32), device=device)
 
-    pred_bin = (sil > 0.5).float()
+    pred_bin = (sil > 0.1).float()
     inter    = (pred_bin * gt).sum()
     union    = (pred_bin + gt - pred_bin * gt).sum().clamp(min=1.0)
     hard_iou = float(inter / union)
@@ -212,16 +224,24 @@ def main():
     base_cd  = mean_cd.get("baseline")
     base_iou = mean_iou.get("baseline")
 
-    # Summary table
-    print(f"\n{'config':<20} {'CD↓':>8} {'F@0.02↑':>9} {'IoU↑':>8}  n")
-    print("-" * 55)
+    # Summary table (CD + all F-score thresholds + hard IoU)
+    hdr = f"{'config':<20} {'CD↓':>8}"
+    for tau in FSCORE_THRESHOLDS:
+        hdr += f" {'F@'+str(tau)+'↑':>9}"
+    hdr += f" {'IoU↑(hard)':>11}  n"
+    print(f"\n{hdr}")
+    print("-" * (len(hdr) + 4))
     for cfg_name in sorted(mean_cd, key=config_sort_key):
         cfg_rows = [r for r in rows if r["config"] == cfg_name]
         m_cd  = np.mean([r["chamfer"] for r in cfg_rows])
-        m_f02 = np.mean([r[f"f@0.02"] for r in cfg_rows])
+        line  = f"{cfg_name:<20} {m_cd:>8.4f}"
+        for tau in FSCORE_THRESHOLDS:
+            mf = np.mean([r[f"f@{tau}"] for r in cfg_rows])
+            line += f" {mf:>9.4f}"
         ious  = [r["hard_iou"] for r in cfg_rows if r["hard_iou"] != ""]
-        iou_s = f"{np.mean(ious):>8.4f}" if ious else "     n/a"
-        print(f"{cfg_name:<20} {m_cd:>8.4f} {m_f02:>9.4f} {iou_s}  {len(cfg_rows)}")
+        iou_s = f"{np.mean(ious):>11.4f}" if ious else "        n/a"
+        line += f" {iou_s}  {len(cfg_rows)}"
+        print(line)
 
     # Range analysis
     print(f"\n\n{'='*64}")
