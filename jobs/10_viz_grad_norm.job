@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_viz_grad
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=00:30:00
+#SBATCH --output=logs/sam_viz_grad_%j.out
+
+set -eo pipefail
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || true
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sam3d-objects
+
+cd "$HOME/sam-3d-objects"
+export LIDRA_SKIP_INIT=1
+
+mkdir -p logs outputs/viz_grad_norm
+
+echo "=== Grad norm visualization ==="
+python -u scripts/viz_grad_norm.py \
+    --configs depth_1.0 normal_1.0 ss_1.0 pose_0.01
+
+echo "=== Done — check outputs/viz_grad_norm/ ==="

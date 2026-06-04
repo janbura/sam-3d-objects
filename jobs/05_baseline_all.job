@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --partition=gpu_a100
+#SBATCH --partition=gpu_h100
 #SBATCH --gpus=1
 #SBATCH --job-name=sam_baseline_all
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=9
 #SBATCH --mem=32G
-#SBATCH --time=04:00:00
+#SBATCH --time=07:00:00
 #SBATCH --output=logs/sam_baseline_all_%j.out
 
 set -eo pipefail

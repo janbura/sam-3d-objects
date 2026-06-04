@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_sweep_final
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=04:00:00
+#SBATCH --output=logs/sam_sweep_final_%j.out
+
+# Usage: sbatch --array=0-3 jobs/09_sweep_final.job
+# Or single shard: sbatch --export=ALL,SHARD=0,NUM_SHARDS=4 jobs/09_sweep_final.job
+#
+# SHARD and NUM_SHARDS can be overridden at submit time, e.g.:
+#   for i in 0 1 2 3; do sbatch --export=ALL,SHARD=$i,NUM_SHARDS=4 jobs/09_sweep_final.job; done
+
+SHARD=${SLURM_ARRAY_TASK_ID:-${SHARD:-0}}
+NUM_SHARDS=${NUM_SHARDS:-1}
+CONFIGS=${CONFIGS:-"depth_5.0"}   # override after scale tuning
+INSTANCES=${INSTANCES:-"misc/all_1709.txt"}
+
+set -eo pipefail
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || true
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sam3d-objects
+
+cd "$HOME/sam-3d-objects"
+export LIDRA_SKIP_INIT=1
+
+mkdir -p logs
+
+echo "=== GPU ==="
+nvidia-smi
+python -c "import torch; print('CUDA:', torch.cuda.is_available(), '/', torch.cuda.get_device_name(0))"
+
+echo ""
+echo "=== Final sweep  shard=${SHARD}/${NUM_SHARDS}  configs=${CONFIGS} ==="
+time python -u scripts/sweep.py \
+    --instances "${INSTANCES}" \
+    --configs ${CONFIGS} \
+    --shard "${SHARD}" \
+    --num-shards "${NUM_SHARDS}" \
+    --seed 42
+
+echo ""
+echo "=== 09_sweep_final shard=${SHARD} DONE ==="

@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --partition=gpu_h100
 #SBATCH --gpus=1
-#SBATCH --job-name=sam_eval_sweep
+#SBATCH --job-name=sam_sweep_normal
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=04:00:00
-#SBATCH --output=logs/sam_eval_sweep_%j.out
+#SBATCH --time=01:00:00
+#SBATCH --output=logs/sam_sweep_normal_%j.out
 
 set -eo pipefail
 
@@ -28,17 +28,11 @@ nvidia-smi
 python -c "import torch; print('CUDA:', torch.cuda.is_available(), '/', torch.cuda.get_device_name(0))"
 
 echo ""
-echo "=== Eval: ss/depth/normal on all_1709, pose on eval_855 ==="
-time python -u scripts/eval_sweep.py \
-    --instances misc/all_1709.txt \
-    --configs depth_1.0 normal_1.0 ss_1.0 \
-    --device cuda
-
-time python -u scripts/eval_sweep.py \
-    --instances misc/eval_855.txt \
-    --configs pose_0.01 \
-    --device cuda
+echo "=== Normal sweep (3 configs x 85 instances, ~1.8h) ==="
+time python scripts/sweep.py \
+    --instances misc/tune_85.txt \
+    --configs normal_1.0 normal_5.0 normal_10.0 \
+    --seed 42
 
 echo ""
-echo "=== 08_eval_sweep DONE ==="
-echo "Results saved to outputs/sweep/results.csv"
+echo "=== 07b_sweep_normal DONE ==="
