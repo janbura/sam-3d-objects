@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_eval_all
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=12:00:00
+#SBATCH --output=logs/sam_eval_all_%j.out
+
+set -eo pipefail
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || true
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sam3d-objects
+
+cd "$HOME/sam-3d-objects"
+export LIDRA_SKIP_INIT=1
+
+mkdir -p logs
+
+echo "=== GPU ==="
+nvidia-smi
+python -c "import torch; print('CUDA:', torch.cuda.is_available(), '/', torch.cuda.get_device_name(0))"
+
+echo ""
+echo "=== [1/3] Eval baseline (all 1709) ==="
+time python -u scripts/eval_baseline_all.py --device cuda
+
+echo ""
+echo "=== [2/3] Eval sweep: ss/depth/normal on all_1709 ==="
+time python -u scripts/eval_sweep.py \
+    --instances misc/all_1709.txt \
+    --configs depth_1.0 normal_1.0 ss_1.0 \
+    --device cuda
+
+echo ""
+echo "=== [3/3] Eval sweep: pose on eval_855 (stratified 50%) ==="
+time python -u scripts/eval_sweep.py \
+    --instances misc/eval_855.txt \
+    --configs pose_0.01 \
+    --device cuda
+
+echo ""
+echo "=== 11_eval_all DONE ==="
+echo "Baseline results : outputs/baseline_all/results_multi_init.csv"
+echo "Sweep results    : outputs/sweep/results.csv"
