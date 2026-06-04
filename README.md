@@ -1,152 +1,178 @@
-# SAM 3D
+# SAM 3D Objects — Guidance Evaluation
 
-SAM 3D Objects is one part of SAM 3D, a pair of models for object and human mesh reconstruction.  If you’re looking for SAM 3D Body, [click here](https://github.com/facebookresearch/sam-3d-body).
+This README covers the full workflow for running and evaluating Stage 1 guidance on [Open3DHOI](https://github.com/leolyliu/Open3DHOI).
+For the original SAM 3D Objects model documentation, see [README_ORIGINAL.md](README_ORIGINAL.md).
+For technical details on how guidance works, see [GUIDANCE.md](GUIDANCE.md).
 
-# SAM 3D Objects
+---
 
-**SAM 3D Team**, [Xingyu Chen](https://scholar.google.com/citations?user=gjSHr6YAAAAJ&hl=en&oi=sra)\*, [Fu-Jen Chu](https://fujenchu.github.io/)\*, [Pierre Gleize](https://scholar.google.com/citations?user=4imOcw4AAAAJ&hl=en&oi=ao)\*, [Kevin J Liang](https://kevinjliang.github.io/)\*, [Alexander Sax](https://alexsax.github.io/)\*, [Hao Tang](https://scholar.google.com/citations?user=XY6Nh9YAAAAJ&hl=en&oi=sra)\*, [Weiyao Wang](https://sites.google.com/view/weiyaowang/home)\*, [Michelle Guo](https://scholar.google.com/citations?user=lyjjpNMAAAAJ&hl=en&oi=ao), [Thibaut Hardin](https://github.com/Thibaut-H), [Xiang Li](https://ryanxli.github.io/)⚬, [Aohan Lin](https://github.com/linaohan), [Jia-Wei Liu](https://jia-wei-liu.github.io/), [Ziqi Ma](https://ziqi-ma.github.io/)⚬, [Anushka Sagar](https://www.linkedin.com/in/anushkasagar/), [Bowen Song](https://scholar.google.com/citations?user=QQKVkfcAAAAJ&hl=en&oi=sra)⚬, [Xiaodong Wang](https://scholar.google.com/citations?authuser=2&user=rMpcFYgAAAAJ), [Jianing Yang](https://jedyang.com/)⚬, [Bowen Zhang](http://home.ustc.edu.cn/~zhangbowen/)⚬, [Piotr Dollár](https://pdollar.github.io/)†, [Georgia Gkioxari](https://georgiagkioxari.com/)†, [Matt Feiszli](https://scholar.google.com/citations?user=A-wA73gAAAAJ&hl=en&oi=ao)†§, [Jitendra Malik](https://people.eecs.berkeley.edu/~malik/)†§
+## 1. Setup
 
-***Meta Superintelligence Labs***
+Follow the original setup in [doc/setup.md](doc/setup.md) to install the environment and download checkpoints.
 
-*Core contributor (Alphabetical, Equal Contribution), ⚬Intern, †Project leads, §Equal Contribution
+### Data — Open3DHOI
 
-[[`Paper`](https://ai.meta.com/research/publications/sam-3d-3dfy-anything-in-images/)] [[`Code`](https://github.com/facebookresearch/sam-3d-objects)] [[`Website`](https://ai.meta.com/sam3d/)] [[`Demo`](https://www.aidemos.meta.com/segment-anything/editor/convert-image-to-3d)] [[`Blog`](https://ai.meta.com/blog/sam-3d/)] [[`BibTeX`](#citing-sam-3d-objects)] [[`Roboflow`](https://blog.roboflow.com/sam-3d/)]
-
-**SAM 3D Objects** is a foundation model that reconstructs full 3D shape geometry, texture, and layout from a single image, excelling in real-world scenarios with occlusion and clutter by using progressive training and a data engine with human feedback. It outperforms prior 3D generation models in human preference tests on real-world objects and scenes. We released code, weights, online demo, and a new challenging benchmark.
-
-
-<p align="center"><img src="doc/intro.png"/></p>
-
------
-
-<p align="center"><img src="doc/arch.png"/></p>
-
-## Latest updates
-
-**11/19/2025** - Checkpoints Launched, Web Demo and Paper are out.
-
-## Installation
-
-Follow the [setup](doc/setup.md) steps before running the following.
-
-## Single or Multi-Object 3D Generation
-
-SAM 3D Objects can convert masked objects in an image, into 3D models with pose, shape, texture, and layout. SAM 3D is designed to be robust in challenging natural images, handling small objects and occlusions, unusual poses, and difficult situations encountered in uncurated natural scenes like this kidsroom:
-
-<p align="center">
-  <img src="notebook/images/shutterstock_stylish_kidsroom_1640806567/image.png" width="55%"/>
-  <img src="doc/kidsroom_transparent.gif" width="40%"/>
-</p>
-
-For a quick start, run `python demo.py` or use the the following lines of code:
-
-```python
-import sys
-
-# import inference code
-sys.path.append("notebook")
-from inference import Inference, load_image, load_single_mask
-
-# load model
-tag = "hf"
-config_path = f"checkpoints/{tag}/pipeline.yaml"
-inference = Inference(config_path, compile=False)
-
-# load image and mask
-image = load_image("notebook/images/shutterstock_stylish_kidsroom_1640806567/image.png")
-mask = load_single_mask("notebook/images/shutterstock_stylish_kidsroom_1640806567", index=14)
-
-# run model
-output = inference(image, mask, seed=42)
-
-# export gaussian splat
-output["gs"].save_ply(f"splat.ply")
+```bash
+# Download Open3DHOI dataset and place under data/
+# Expected structure:
+# data/Open3DHOI/data/{category}/{instance}/
+#   image.jpg
+#   obj_mask.png
+#   depth.npy          # not all instances have this — depth/normal guidance skips those
+#   gt_mesh.obj
 ```
 
-For  more details and multi-object reconstruction, please take a look at out two jupyter notebooks:
-* [single object](notebook/demo_single_object.ipynb)
-* [multi object](notebook/demo_multi_object.ipynb)
+### Snellius
 
+```bash
+# Outputs are symlinked to scratch for storage
+ln -s /gpfs/scratch1/shared/scur0847_sweep         outputs/sweep
+ln -s /gpfs/scratch1/shared/scur0847_sam3d_baseline outputs/baseline_all
+```
 
-## SAM 3D Body
+---
 
-[SAM 3D Body (3DB)](https://github.com/facebookresearch/sam-3d-body) is a robust promptable foundation model for single-image 3D human mesh recovery (HMR).
+## 2. Baseline (no guidance)
 
-As a way to combine the strengths of both **SAM 3D Objects** and **SAM 3D Body**, we provide an example notebook that demonstrates how to combine the results of both models such that they are aligned in the same frame of reference. Check it out [here](notebook/demo_3db_mesh_alignment.ipynb).
+Run inference on all 1709 Open3DHOI instances without any guidance signal.
 
-## License
+```bash
+# Single job — runs all instances sequentially
+sbatch jobs/05_baseline_all.job
 
-The SAM 3D Objects model checkpoints and code are licensed under [SAM License](./LICENSE).
+# Check results
+tail -f logs/sam_baseline_all_<JOBID>.out
+```
 
-## Contributing
+Output: `outputs/baseline_all/{category}/{instance}/pred_mesh.obj`
 
-See [contributing](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md).
+---
 
-## Contributors
+## 3. Eval Baseline
 
-The SAM 3D Objects project was made possible with the help of many contributors.
+Compute Chamfer Distance, F-score, and IoU for baseline results.
 
-Robbie Adkins,
-Paris Baptiste,
-Karen Bergan,
-Kai Brown,
-Michelle Chan,
-Ida Cheng,
-Khadijat Durojaiye,
-Patrick Edwards,
-Daniella Factor,
-Facundo Figueroa,
-Rene  de la Fuente,
-Eva Galper,
-Cem Gokmen,
-Alex He,
-Enmanuel Hernandez,
-Dex Honsa,
-Leonna Jones,
-Arpit Kalla,
-Kris Kitani,
-Helen Klein,
-Kei Koyama,
-Robert Kuo,
-Vivian Lee,
-Alex Lende,
-Jonny Li,
-Kehan Lyu,
-Faye Ma,
-Mallika Malhotra,
-Sasha Mitts,
-William Ngan,
-George Orlin,
-Peter Park,
-Don Pinkus,
-Roman Radle,
-Nikhila Ravi,
-Azita Shokrpour,
-Jasmine Shone,
-Zayida Suber,
-Phillip Thomas,
-Tatum Turner,
-Joseph Walker,
-Meng Wang,
-Claudette Ward,
-Andrew Westbury,
-Lea Wilken,
-Nan Yang,
-Yael Yungster
+```bash
+sbatch jobs/06_eval_baseline_all.job
+```
 
+Output: `outputs/baseline_all/results_multi_init.csv`
 
-## Citing SAM 3D Objects
+---
 
-If you use SAM 3D Objects in your research, please use the following BibTeX entry.
+## 4. Guidance Sweep
+
+Run inference with guidance signals on all instances. Uses sharded jobs for parallelism.
+
+### Instance lists
+
+| File | Description |
+|------|-------------|
+| `misc/all_1709.txt` | Full 1709-instance set |
+| `misc/eval_855.txt` | Stratified 50% subset (main eval) |
+| `misc/pose_428.txt` | Stratified 25% subset (pose eval) |
+| `misc/tune_85.txt` | Stratified 5% subset (scale tuning) |
+
+### Available configs
+
+| Config | Guidance | Scale |
+|--------|----------|-------|
+| `ss_1.0` | Silhouette | 1.0 |
+| `depth_1.0` | Depth | 1.0 |
+| `normal_1.0` | Normal | 1.0 |
+| `pose_0.01` | Pose | 0.01 |
+
+### Running a sweep
+
+```bash
+# Sharded sweep — adjust SHARD, NUM_SHARDS, CONFIGS, INSTANCES as needed
+
+# Silhouette (4 shards, ~21h total)
+for i in 0 1 2 3; do
+  sbatch --time=24:00:00 \
+    --export=ALL,SHARD=$i,NUM_SHARDS=4,CONFIGS="ss_1.0",INSTANCES="misc/all_1709.txt" \
+    jobs/09_sweep_final.job
+done
+
+# Depth (2 shards, ~12h total)
+for i in 0 1; do
+  sbatch --time=12:00:00 \
+    --export=ALL,SHARD=$i,NUM_SHARDS=2,CONFIGS="depth_1.0",INSTANCES="misc/all_1709.txt" \
+    jobs/09_sweep_final.job
+done
+
+# Normal (2 shards, ~12h total)
+for i in 0 1; do
+  sbatch --time=12:00:00 \
+    --export=ALL,SHARD=$i,NUM_SHARDS=2,CONFIGS="normal_1.0",INSTANCES="misc/all_1709.txt" \
+    jobs/09_sweep_final.job
+done
+
+# Pose (6 shards, ~24h total — evaluated on stratified 50%)
+for i in 0 1 2 3 4 5; do
+  sbatch --time=24:00:00 \
+    --export=ALL,SHARD=$i,NUM_SHARDS=6,CONFIGS="pose_0.01",INSTANCES="misc/eval_855.txt" \
+    jobs/09_sweep_final.job
+done
+```
+
+Each instance output is saved to `outputs/sweep/{config}/{category}/{instance}/`:
+- `pred_mesh.obj` — reconstructed mesh
+- `final_step.pt` — occupancy grid from last denoising step (used for IoU)
+- `pose_params.pt` — predicted pose parameters
+- `grad_stats.pt` — gradient norms per timestep (for analysis)
+
+> **Note:** instances without `depth.npy` are automatically skipped for `depth_1.0` and `normal_1.0` (109 instances in Open3DHOI).
+
+---
+
+## 5. Eval Sweep
+
+Evaluate all guidance configs against baseline. Runs baseline + sweep eval in one job:
+
+```bash
+sbatch jobs/11_eval_all.job
+```
+
+Or separately:
+
+```bash
+# Sweep only (ss/depth/normal on full dataset, pose on stratified 50%)
+sbatch jobs/08_eval_sweep.job
+```
+
+Output: `outputs/sweep/results.csv`
+
+### Results table format
 
 ```
-@article{sam3dteam2025sam3d3dfyimages,
-      title={SAM 3D: 3Dfy Anything in Images}, 
-      author={SAM 3D Team and Xingyu Chen and Fu-Jen Chu and Pierre Gleize and Kevin J Liang and Alexander Sax and Hao Tang and Weiyao Wang and Michelle Guo and Thibaut Hardin and Xiang Li and Aohan Lin and Jiawei Liu and Ziqi Ma and Anushka Sagar and Bowen Song and Xiaodong Wang and Jianing Yang and Bowen Zhang and Piotr Dollár and Georgia Gkioxari and Matt Feiszli and Jitendra Malik},
-      year={2025},
-      eprint={2511.16624},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2511.16624}, 
-}
+config,n,cd_mean,f_score_mean,iou_mean
+baseline,...
+ss_1.0,...
+depth_1.0,...
+normal_1.0,...
+pose_0.01,...
 ```
+
+---
+
+## 6. Grad Norm Visualization
+
+Plot gradient norm vs diffusion timestep per guidance family:
+
+```bash
+sbatch jobs/10_viz_grad_norm.job
+```
+
+Output: `outputs/viz_grad_norm/grad_norm_vs_timestep.png`
+
+---
+
+## Timing reference (H100)
+
+| Config | Time/instance | Notes |
+|--------|-------------|-------|
+| Baseline | ~45s | |
+| Silhouette | ~174s | |
+| Depth / Normal | ~59s | skips instances without depth.npy |
+| Pose | ~600s | 2 backward passes |
