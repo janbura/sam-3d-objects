@@ -1,4 +1,6 @@
 #!/bin/bash
+# Partition names below are Snellius-specific; set per account/cluster.
+# If your allocation requires it, also add: #SBATCH --account=<your-allocation>
 #SBATCH --partition=rome
 #SBATCH --job-name=sam_setup_cpu
 #SBATCH --ntasks=1
@@ -44,8 +46,12 @@ export PIP_EXTRA_INDEX_URL="https://pypi.ngc.nvidia.com https://download.pytorch
 echo "=== pip install -e .[dev] ==="
 pip install -e '.[dev]'
 
-echo "=== pip install -e .[p3d] ==="
-pip install -e '.[p3d]'
+# NOTE: '.[p3d]' (pytorch3d + flash_attn) is intentionally NOT installed here.
+# Both are source-compiled CUDA extensions. Building them on this CPU-only
+# 'rome' partition makes torch.cuda.is_available() False at build time, so they
+# compile WITHOUT CUDA and fail at runtime with "Not compiled with GPU support".
+# They are built in 03_install_inference_gpu.job on a GPU node instead.
+# See doc/setup.md.
 
 echo "=== Torch check ==="
 python -c "import torch; print('Torch:', torch.__version__, 'CUDA build:', torch.version.cuda)"

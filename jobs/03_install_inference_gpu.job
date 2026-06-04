@@ -1,4 +1,6 @@
 #!/bin/bash
+# Partition names below are Snellius-specific; set per account/cluster.
+# If your allocation requires it, also add: #SBATCH --account=<your-allocation>
 #SBATCH --partition=gpu_mig
 #SBATCH --gpus=1
 #SBATCH --job-name=sam_install_inference
@@ -30,6 +32,18 @@ cd "${SAM3D_REPO}"
 export PIP_EXTRA_INDEX_URL="https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121"
 export PIP_FIND_LINKS="https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.1_cu121.html"
 
+# Point the build at the CUDA toolkit bundled inside the conda env, so compiling
+# the extensions does not depend on a cluster-specific CUDA module name (keeps
+# this portable across accounts/clusters).
+export CUDA_HOME="${SAM3D_CONDA_ENVS}/${SAM3D_ENV_NAME}"
+
+# Build the source-compiled CUDA extensions (pytorch3d + flash_attn) HERE, on a
+# GPU node, so torch.cuda.is_available() is True at build time and they compile
+# WITH CUDA support. Building them on a CPU node yields a runtime
+# "Not compiled with GPU support" error (see doc/setup.md and 01_setup_cpu.job).
+echo "=== pip install -e .[p3d] (GPU build: pytorch3d + flash_attn) ==="
+pip install -e '.[p3d]'
+
 echo "=== pip install -e .[inference] ==="
 pip install -e '.[inference]'
 
@@ -38,9 +52,34 @@ chmod +x ./patching/hydra
 ./patching/hydra
 
 echo "=== Verify key packages ==="
-python -c "import pytorch3d; print('pytorch3d:', pytorch3d.__version__)" || echo "pytorch3d import failed"
 python -c "import kaolin; print('kaolin:', kaolin.__version__)" || echo "kaolin import failed"
 python -c "import hydra; print('hydra:', hydra.__version__)" || echo "hydra import failed"
-python -c "import flash_attn; print('flash_attn: OK')" || echo "flash_attn import failed"
+
+# Strong PyTorch3D check: "Not compiled with GPU support" passes import and only
+# errors when a CUDA kernel actually runs, so verify with a real CUDA op. This
+# block has NO '|| echo' fallback: under 'set -eo pipefail' any failure (import,
+# missing CUDA, or the CPU-only-build RuntimeError) aborts the job loudly.
+echo "=== Verify PyTorch3D compiled WITH CUDA (real op, not just import) ==="
+python - <<'PYEOF'
+import sys
+import torch
+import pytorch3d
+from pytorch3d.ops import knn_points
+
+print("pytorch3d:", pytorch3d.__version__)
+if not torch.cuda.is_available():
+    sys.exit("ERROR: CUDA not available at verification time")
+
+pts = torch.rand(1, 128, 3, device="cuda")
+# knn_points dispatches to the compiled CUDA kernel; a CPU-only pytorch3d build
+# raises "RuntimeError: Not compiled with GPU support" right here.
+out = knn_points(pts, pts, K=8)
+assert out.idx.is_cuda, "knn_points did not run on CUDA"
+torch.cuda.synchronize()
+print("pytorch3d CUDA op OK: knn_points ran on", out.idx.device)
+
+import flash_attn
+print("flash_attn:", flash_attn.__version__)
+PYEOF
 
 echo "=== 03_install_inference_gpu DONE ==="
