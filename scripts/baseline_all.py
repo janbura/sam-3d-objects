@@ -20,7 +20,6 @@ import sys
 
 import torch
 
-import numpy as np
 import trimesh
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +30,7 @@ from main import build_guidance
 
 DATA_ROOT      = "data/Open3DHOI/data"
 OUT_ROOT       = "outputs/baseline_all"
-CATEGORIES_TXT = "categories.txt"
+CATEGORIES_TXT = "misc/categories.txt"
 
 
 def load_categories():
@@ -128,6 +127,8 @@ def run(tag, seed, cap, offset, limit, instances_file=None):
             image = load_image(os.path.join(inst_dir, "image.jpg"))
             mask  = load_mask(os.path.join(inst_dir, "obj_mask.png"))
 
+            steps_prefix = os.path.join("baseline_all", cat, inst)
+
             guidance = build_guidance(
                 mask_path=os.path.join(inst_dir, "obj_mask.png"),
                 ss_guidance_scale=None,
@@ -135,18 +136,14 @@ def run(tag, seed, cap, offset, limit, instances_file=None):
                 depth_guidance_scale=None,
                 normal_guidance_scale=None,
                 depth_map=None,
-                steps_prefix=None,
+                steps_prefix=steps_prefix,
                 w_centroid=1.0,
                 w_size=1.0,
             )
 
-            output = inference(image, mask, seed=seed, steps_prefix=None, guidance=guidance)
+            output = inference(image, mask, seed=seed, steps_prefix=steps_prefix, guidance=guidance)
 
             os.makedirs(out_dir, exist_ok=True)
-
-            if "gs" in output:
-                np.save(os.path.join(out_dir, "pred_points.npy"),
-                        output["gs"].get_xyz.detach().cpu().numpy())
 
             if "mesh" in output:
                 mesh = output["mesh"][0]
