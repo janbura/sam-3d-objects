@@ -1,0 +1,570 @@
+# User shard 2/3 — 569 instances from all_1709.txt
+cup/HICO_train2015_00001318
+suitcase/HICO_train2015_00000809
+frisbee/COCO_train2014_000000381544
+cup/HICO_train2015_00002078
+banana/HICO_train2015_00010614
+bench/2402226
+handbag/2388247
+apple/COCO_train2014_000000578231
+cake/713770
+suitcase/HICO_train2015_00007565
+bench/411cb311d9bf8f44
+handbag/2352984
+cake/COCO_train2014_000000520873
+wine glass/88fff946c4076355
+sandwich/HICO_train2015_00009814
+suitcase/2352556
+tennis racket/COCO_val2014_000000419369
+remote/61547
+wine glass/bc8d2cbbd45ef421
+chair/6197da28c88ccfb3
+home plate/sliding_64
+sports ball/HICO_train2015_00009141
+ice cream/biting_130
+chair/6109887ac68c7ef5
+chair/HICO_train2015_00005966
+dining table/1266aa383bd9b1fc
+suitcase/2416698
+couch/COCO_train2014_000000516261_1
+chair/27ae968f80fd1449
+handbag/HICO_train2015_00012329
+clock/HICO_train2015_00005269
+cup/HICO_train2015_00003688
+tie/2384685
+stone/stone
+tennis racket/2377422
+spoon/HICO_train2015_00008192
+banana/HICO_train2015_00003916
+handbag/3f632945c3465d1b
+handbag/d7bbf8222a56d88a
+backpack/99a0f2730ff16a5c
+cake/indoor_05534
+bed/1913b16314051354
+cup/HICO_train2015_00007743
+bench/COCO_val2014_000000025244_0
+handbag/0a00907baee39c7f
+bench/COCO_train2014_000000181330_6
+chair/COCO_val2014_000000227359
+donut/COCO_val2014_000000052016
+bed/2335369
+donut/COCO_train2014_000000479035_3
+bed/HICO_train2015_00002535
+banana/COCO_train2014_000000349750
+sandwich/COCO_train2014_000000089052
+bed/2384085
+bed/2350101
+bottle/413e684ac0688883
+chair/6fe47b96774c903d
+cup/HICO_train2015_00011199
+chair/45c746c555069f3e
+bench/2353906
+chair/f0db04849d8c2d43
+chair/642897aa9a8aa8ec
+bed/2322371
+donut/HICO_train2015_00004220
+handbag/HICO_train2015_00011412
+bowl/2338946
+tennis racket/COCO_val2014_000000502776
+hot dog/HICO_train2015_00009755
+chair/a02ecec4a6dea7f9
+bench/2323594
+sandwich/COCO_train2014_000000561616
+donut/COCO_train2014_000000418445
+toilet/HICO_train2015_00010023
+suitcase/HICO_train2015_00013568_1
+tennis racket/2334944
+frisbee/COCO_val2014_000000378454
+baseball glove/HICO_train2015_00005126
+bench/2337819
+couch/COCO_train2014_000000226597
+chair/HICO_train2015_00008470
+bed/40b6674bd8f245a0
+tennis racket/COCO_train2014_000000499027
+handbag/69c5df2d91f18f2b
+chair/8d90facc319ae45e
+bench/HICO_train2015_00013695
+suitcase/HICO_train2015_00001725
+bench/HICO_train2015_00002057
+baseball glove/HICO_train2015_00003435
+chair/d67c91263fcbc99d
+tennis racket/2362068
+carrot/2398101
+chair/HICO_train2015_00012783
+tennis racket/2371479
+chair/57b30e0a179a7957
+couch/2316169
+scissors/HICO_train2015_00012794
+cup/37ac93a70ce2282c
+chair/HICO_train2015_00008654
+tennis racket/2325882
+banana/2402291
+sports ball/73ed398151cda1a4
+handbag/HICO_train2015_00001710
+donut/HICO_train2015_00010947
+chair/b2789a524e8f6d7e
+couch/704d933fcb876ae8
+bench/HICO_train2015_00004978
+donut/2388071
+handbag/HICO_train2015_00001590
+bed/1ad2536223052dd2
+sports ball/8a24daa3cd41c3fa
+bench/2412019
+tennis racket/HICO_train2015_00004316
+handbag/COCO_train2014_000000206747
+chair/dc689e41ebe7db02
+cake/HICO_train2015_00000496
+couch/COCO_train2014_000000238502_0
+cake/COCO_train2014_000000499979
+chair/HICO_train2015_00006653
+chair/HICO_train2015_00014001
+tennis racket/2376166
+scissors/HICO_train2015_00005770
+cell phone/COCO_train2014_000000328740
+couch/c4e452e553cd2718
+sports ball/HICO_train2015_00010280
+tennis racket/COCO_train2014_000000417298
+chair/603ec10b22394495
+tennis racket/COCO_train2014_000000512944
+hot dog/COCO_train2014_000000365587
+clock/COCO_train2014_000000420487
+chair/HICO_train2015_00005014
+bed/COCO_train2014_000000039643
+chair/2f0e5dc297debca2
+cake/HICO_train2015_00001549
+sandwich/2358591
+couch/c1ce53e30d13e1fb
+laptop/COCO_train2014_000000460916
+tennis racket/2344534
+bench/80ef1cdc8b5fc838
+bench/HICO_train2015_00005727
+cake/HICO_train2015_00007482
+frisbee/HICO_train2015_00007885
+chair/6e80605768a9a4fe
+teddy bear/COCO_val2014_000000566529
+tennis racket/COCO_train2014_000000471762
+donut/COCO_train2014_000000550392
+shovel/shovel
+toothbrush/2323813
+cake/HICO_train2015_00012479
+chair/f60c24978ffb25c6
+chair/b30f7b2c88997dfa
+tennis racket/2324641
+chair/95cc552cbd7c02a6
+backpack/4bba394d7c026b91
+power drill/assembling_174
+tennis racket/COCO_val2014_000000261732
+bench/0fa628c8b295341e
+couch/HICO_train2015_00009427
+book/COCO_train2014_000000416549_3
+bench/2334036
+tennis racket/COCO_val2014_000000520478
+tennis racket/COCO_val2014_000000233915
+couch/2347496
+handbag/18d4ed0668bfeefe
+bench/HICO_train2015_00007713
+bench/HICO_train2015_00002029
+bench/62d8bcc502816a55
+helmet/helmet
+banana/HICO_train2015_00010070
+laptop/COCO_train2014_000000008383
+chair/96d989f1f371338c
+scissors/HICO_train2015_00007587
+chair/HICO_train2015_00001554
+handbag/HICO_train2015_00000480
+chair/15c03d0bdc352ead
+bench/2353263
+cake/indoor_03222
+couch/76f49590c3f4b21c
+handbag/cea8cfd4ad38813b
+bench/1159944
+bottle/2681b465498b8405
+tennis racket/COCO_val2014_000000566908
+boot/licking_140
+bench/9c6ffbb17520bde8
+chair/d83cad56ca5d6497
+bench/2347485
+bench/2337587
+chair/6bb2ff6933ef1a95
+fork/2401487
+chair/8ef15101f3dbf3d7
+sandwich/2409913
+chair/5967cae003a95a2c
+bench/5b0cfb13c3812a26
+tennis racket/COCO_val2014_000000278323
+teddy bear/2405822
+suitcase/COCO_train2014_000000095211
+handbag/dbbd8197cb0b44a8
+teddy bear/HICO_train2015_00004546_1
+bench/HICO_train2015_00010513
+bench/HICO_train2015_00006776
+bottle/a0cb7f372b86cbd1
+cake/2406407
+float/pulling_258
+sandwich/2415071
+float/riding_123
+tennis racket/2319592
+chair/HICO_train2015_00003748
+cup/1a82537f82af0dfd
+tennis racket/2401654
+chair/COCO_val2014_000000154254_0
+chair/8f42f1a3c44c02ed
+bench/HICO_train2015_00012702
+couch/871b4b5dbbccdb2f
+cup/HICO_train2015_00003243
+book/HICO_train2015_00000759
+dining table/889ad8e166d26030
+chair/a55c8de60b692e6b
+chair/43924536c8dbd656
+chair/43c66860845e787b
+carrot/HICO_train2015_00000688
+bench/2349250
+bed/2349094
+bottle/7b0eafddaeb725cc
+laptop/HICO_train2015_00000279
+bench/HICO_train2015_00000582
+bench/2352303
+spoon/2343279
+couch/d90bff351b3e9bc5
+apple/HICO_train2015_00013619
+bench/b6f3f9b67dfa51ec
+bench/66b1ce22f183393e
+wine glass/f48879d1845dae10
+bottle/40572396d6b0689a
+wine glass/68100bc5799f9f5a
+pizza/2360530
+bottle/HICO_train2015_00008066
+bed/2319923
+bottle/82a49d2f27aa8cd4
+cell phone/COCO_val2014_000000572181
+couch/2360065
+bottle/861bd832684318c5
+laptop/HICO_train2015_00000333
+chair/COCO_train2014_000000463055
+cake/COCO_train2014_000000573063
+chair/8f783c890dfa4e93
+wine glass/2341917
+chair/b0ff7818c2d9b462
+bench/2339107
+bench/e9c412efe0be8b2c
+bottle/de27472872d7a815
+chair/HICO_train2015_00007325
+bed/2385281
+chair/bca2ab9251c45620
+chair/b213b2002d413334
+spoon/HICO_train2015_00001618
+bed/2342761
+bench/HICO_train2015_00002518
+bench/HICO_train2015_00002411
+handbag/1591890
+remote/HICO_train2015_00002546
+tennis racket/2362750
+donut/COCO_val2014_000000448837
+chair/HICO_train2015_00003925
+bench/2357050
+wine glass/83a19568862a8e1c
+bench/21a9c9ae5d66a824
+cake/COCO_train2014_000000297326
+dining table/e70834af9eaf029c
+pizza/COCO_train2014_000000136672
+sports ball/HICO_train2015_00009434
+banana/2351073
+cup/2375457
+chair/cf363cb5502545b7
+bench/HICO_train2015_00003101
+bed/HICO_train2015_00004540
+fork/HICO_train2015_00000736
+tennis racket/2399072
+cake/HICO_train2015_00012731
+chair/COCO_val2014_000000054091
+cake/2376856
+chair/c24c6c49194037cb
+couch/HICO_train2015_00000448
+chair/HICO_train2015_00005159
+bench/15ba4e54b39b1883
+bench/2356188
+banana/2351866
+tennis racket/2401931
+laptop/HICO_train2015_00003801
+tennis racket/HICO_train2015_00005762
+cake/2415772
+handbag/591445b76e627461
+laptop/2327416
+chair/c65b80ca5c718696
+sports ball/HICO_train2015_00001727
+chair/5e25dc3948a5793c
+bench/2324180
+laptop/2330638
+laptop/COCO_val2014_000000441518_0
+bench/2387547
+chair/b858bc713247589a
+cell phone/COCO_train2014_000000332867
+bench/2355755
+sports ball/688ece9cff5124e9
+chair/HICO_train2015_00004305
+chair/8695b71f7abd281c
+couch/82009ee293256a87
+bench/HICO_train2015_00008180
+wine glass/HICO_train2015_00008560
+handbag/2eb26256ed1d4c87
+chair/e46de05d685a2f2d
+chair/23176766f35e4289
+clock/2410685
+wine glass/d5303bfc8091e743
+hot dog/COCO_train2014_000000063109
+bench/HICO_train2015_00005941
+bench/COCO_val2014_000000315037
+chair/8e8f9587261b467f
+cell phone/COCO_val2014_000000260695
+frisbee/2366019
+tennis racket/2378982
+bench/505719b3dc38d82e
+clock/HICO_train2015_00009701
+bench/HICO_train2015_00013318
+bed/2369731
+fire extinguisher/extinguishing_244
+banana/2368969
+chair/15ee420b88562216
+tennis racket/COCO_val2014_000000509867
+cell phone/COCO_val2014_000000061414
+cup/COCO_val2014_000000413044
+bench/07f234e9bbc66387
+handbag/e2b350e52e5b62ce
+chair/9bc119ff85c25a6b
+bench/HICO_train2015_00009283
+bucket/bucket
+bottle/9622895cf55de41f
+bench/1a783f7f069c787a
+bench/HICO_train2015_00007532
+remote/HICO_train2015_00003051
+chair/7fc32fef25811245
+couch/HICO_train2015_00010268
+laptop/COCO_val2014_000000062623
+bench/HICO_train2015_00010316
+package/opening_145
+laptop/HICO_train2015_00003781
+pizza/COCO_train2014_000000523201
+couch/1e063601cc97ce46
+couch/9ae921e0fd5c8fb0
+spoon/COCO_train2014_000000522704_1
+handbag/HICO_train2015_00005359
+laptop/HICO_train2015_00012474
+chair/6f43fc59d4d580a5
+chair/50786744cd45fa76
+bottle/7e5f5c2ea7701173
+wine glass/COCO_train2014_000000455334
+donut/2364528
+bench/HICO_train2015_00011443
+frisbee/2373671
+suitcase/HICO_train2015_00005632
+bowl/HICO_train2015_00011526
+laptop/COCO_train2014_000000221378
+laptop/COCO_val2014_000000422918
+donut/HICO_train2015_00001934
+bowl/HICO_train2015_00009661
+frisbee/HICO_train2015_00002612
+bowl/HICO_train2015_00010408
+teddy bear/HICO_train2015_00005436
+bottle/3ca3890d96f121ce
+cup/HICO_train2015_00004781
+bench/2354877
+chair/d07e15300dd41670
+remote/HICO_train2015_00005821
+bench/2319224
+pizza/COCO_train2014_000000395284_1
+knife/COCO_val2014_000000010149_2
+frisbee/HICO_train2015_00012115
+bench/3a8448d802f292eb
+bench/2346668
+hair drier/HICO_train2015_00006612
+laptop/COCO_val2014_000000208995
+scissors/COCO_val2014_000000492271
+frisbee/COCO_val2014_000000552188
+knife/HICO_train2015_00005457
+chair/HICO_train2015_00009873
+bench/2356628
+frisbee/COCO_train2014_000000410052
+chair/27aa4636a225ec28
+carrot/COCO_val2014_000000549427
+bench/HICO_train2015_00004874
+couch/2340657
+bench/HICO_train2015_00003832
+bottle/c1abdb78fedefb15
+chair/2342597
+pizza/2315916
+pizza/2352481
+bench/2347491
+bench/c8e977cd8fc4b253
+bench/HICO_train2015_00003746
+bench/COCO_train2014_000000023927
+bench/2327240
+pizza/COCO_val2014_000000565986
+bench/2349219
+chair/ba79fd06f991b36d
+laptop/COCO_train2014_000000463055
+chair/COCO_train2014_000000247421
+bed/2361141
+pizza/2401106
+bench/2378847
+violin/violin
+hair drier/HICO_train2015_00011745
+bench/2365424
+pizza/HICO_train2015_00006165
+chair/46175d87f40bac3b
+chair/42dc3955764f2468
+wine glass/c8dfcf28c09243f7
+bench/HICO_train2015_00006811
+pizza/COCO_val2014_000000223740
+wine glass/3c39df1aa4051c76
+bench/1a066e0fd4f1fc89
+laptop/COCO_train2014_000000107148_3
+cake/HICO_train2015_00001426
+tennis racket/COCO_train2014_000000541209
+tie/2367366
+sports ball/b1cf4853e4e4a340
+couch/cd1a332f22a6d43b
+pizza/2379756
+chair/a6c30a4d4a745851
+bench/COCO_val2014_000000459153
+sports ball/outdoor_04174
+bench/2377730
+laptop/COCO_train2014_000000004567
+bench/2348814
+wine glass/0c72ab77349e218f
+bench/HICO_train2015_00012205
+umbrella/HICO_train2015_00004063
+laptop/COCO_val2014_000000063525
+bottle/COCO_train2014_000000477136_0
+wine glass/2360522
+suitcase/HICO_train2015_00005567
+sports ball/26c9b987cc3b4aed
+frisbee/2373861
+pizza/COCO_val2014_000000246436
+banana/2398353
+laptop/2375743
+chair/COCO_val2014_000000480663
+tennis racket/COCO_train2014_000000460039
+bench/5ce8034f4632aae0
+bench/2363153
+chair/a25ef6b00aef41e5
+wine glass/HICO_train2015_00005120
+banana/2371247
+keyboard/HICO_train2015_00006968
+chair/HICO_train2015_00005061
+umbrella/HICO_train2015_00008497
+sports ball/COCO_train2014_000000111756
+laptop/COCO_train2014_000000316085
+chair/99cd846e5eca1e78
+sports ball/COCO_val2014_000000298331
+bottle/5a303177e42fbbc8
+wine glass/HICO_train2015_00009452
+laptop/COCO_train2014_000000313220_1
+wine glass/54599c13a42018d3
+chair/75e3552bec464a51
+cake/HICO_train2015_00002030
+bench/HICO_train2015_00001161
+frisbee/COCO_train2014_000000130513
+bench/2316036
+book/HICO_train2015_00001231
+umbrella/HICO_train2015_00010486
+dining table/9b8d8d635aff4024
+bouquet/bouquet
+wine glass/HICO_train2015_00008121
+carrot/HICO_train2015_00001579
+bench/COCO_val2014_000000341921
+chair/b519bed2e376daab
+chair/fa4a06869c2a1994
+couch/HICO_train2015_00000256
+umbrella/2417645
+chair/5fcc95aa583df4c5
+laptop/COCO_train2014_000000327804
+suitcase/HICO_train2015_00005195
+bench/COCO_train2014_000000247469
+laptop/COCO_train2014_000000475952
+wine glass/d784c3b4a4a74842
+knife/HICO_train2015_00005266
+wine glass/adc4dc6142b5c435
+bench/dacbdf275b9a3a9b
+wine glass/HICO_train2015_00000738
+pizza/COCO_val2014_000000342650
+toothbrush/HICO_train2015_00010249
+bottle/f5f5596e099aa8f4
+chair/7e086aa1522d50e9
+umbrella/HICO_train2015_00007931
+sports ball/c22576d80454a423
+chair/950bfb67813d1ca6
+wine glass/HICO_train2015_00003054
+bench/2352209
+bench/HICO_train2015_00007295
+bench/5e15cd3a47c6457e
+wine glass/d058fb726edb79e9
+bench/2dbb3f5c28a55d4b
+knife/COCO_train2014_000000519852
+bottle/8e49ce18603fd2ed
+bench/COCO_val2014_000000146742
+laptop/COCO_train2014_000000126073
+chair/HICO_train2015_00004604
+television/television
+sports ball/8744ff26453bb2fe
+wine glass/HICO_train2015_00007084
+bench/3ed566ea5020e9a3
+wine glass/83dfd0affb7fb543
+bowl/HICO_train2015_00006535
+bottle/757f29747aeefe94
+bench/2319634
+tennis racket/2353033
+bench/HICO_train2015_00006674
+wine glass/460e3097c74c1e19
+bench/ecfa83b317de1752
+bench/HICO_train2015_00009208
+bench/2378828
+bottle/COCO_val2014_000000579760
+laptop/COCO_train2014_000000465247
+bench/deee564bb02c19b4
+umbrella/HICO_train2015_00003618
+bottle/6fa1c4fe7f31889f
+laptop/HICO_train2015_00009852
+bench/593c8a41e61f1510
+wine glass/ddc37b778ddd3fac
+bench/HICO_train2015_00012490
+bench/5792d3611ff6a388
+tennis racket/2406861
+bench/HICO_train2015_00005936
+wine glass/6dee5cc1488cccbe
+bench/5b8f63be986ccb96
+sports ball/ce08dbd7f217d189
+bench/2327993
+knife/HICO_train2015_00009128
+bench/2357662
+bench/2364052
+pizza/COCO_train2014_000000265810
+tennis racket/COCO_val2014_000000406129
+handbag/a7c08e8c67d0e72c
+bottle/924cf1a100e32f81
+chair/84df200352ec5caa
+wine glass/2c0cc429dfadf246
+umbrella/HICO_train2015_00005183
+wine glass/f245064dbcf9079b
+baggage/carrying_1
+sports ball/dc7660e0d49856fa
+laptop/HICO_train2015_00012989
+knife/HICO_train2015_00001717
+wine glass/0f63b9c2203a57d4
+dining table/df02b438cd63307c
+chair/b374610c3cb4ec7e
+bottle/1fba46e17638a4e4
+toothbrush/HICO_train2015_00008642
+bottle/HICO_train2015_00013405
+wrench/wrench
+bench/2395009
+spoon/HICO_train2015_00003634
+bottle/44337e786ee260b9
+bottle/2365994
+hairbrush/brushing_216
+bench/1605682daf3d4723
+banana/HICO_train2015_00007283
+bottle/HICO_train2015_00006890
+bottle/5bfab3bad39a5a6a
+bottle/HICO_train2015_00002270
+pen/pen
+bench/2408036

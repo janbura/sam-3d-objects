@@ -5,17 +5,19 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
-#SBATCH --time=04:00:00
+#SBATCH --time=24:00:00
 #SBATCH --output=logs/sam_sweep_combo_%j.out
 
-# Vibe-check composite guidance on 17 stratified instances.
-# Override at submit time:
-#   sbatch --export=ALL,CONFIGS=pose_ss                jobs/15_sweep_combos.job
-#   sbatch --export=ALL,CONFIGS=pose_depth_normal      jobs/15_sweep_combos.job
-#   sbatch --export=ALL,CONFIGS=pose_ss_depth_normal   jobs/15_sweep_combos.job
+# Run composite guidance configs on a shard of instances.
+# Override at submit time, e.g.:
+#   for i in 0 1 2 3; do
+#     sbatch --export=ALL,CONFIGS=pose_ss,SHARD=$i,NUM_SHARDS=4,INSTANCES=misc/sweep_user0.txt jobs/13_sweep_combos.job
+#   done
 
 CONFIGS=${CONFIGS:-"pose_ss_depth_normal"}
 INSTANCES=${INSTANCES:-"misc/combo_17.txt"}
+SHARD=${SHARD:-0}
+NUM_SHARDS=${NUM_SHARDS:-1}
 
 set -eo pipefail
 
@@ -37,11 +39,13 @@ nvidia-smi
 python -c "import torch; print('CUDA:', torch.cuda.is_available(), '/', torch.cuda.get_device_name(0))"
 
 echo ""
-echo "=== Combo sweep  configs=${CONFIGS}  instances=${INSTANCES} ==="
+echo "=== Combo sweep  configs=${CONFIGS}  instances=${INSTANCES}  shard=${SHARD}/${NUM_SHARDS} ==="
 time python -u scripts/sweep.py \
     --instances "${INSTANCES}" \
     --configs ${CONFIGS} \
+    --shard "${SHARD}" \
+    --num-shards "${NUM_SHARDS}" \
     --seed 42
 
 echo ""
-echo "=== 15_sweep_combos DONE ==="
+echo "=== 13_sweep_combos DONE ==="
