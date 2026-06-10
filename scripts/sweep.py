@@ -65,8 +65,12 @@ CONFIGS = {
     "normal_5.0":    {"ss": None,  "pose": None, "depth": None, "normal": 5.0},
     "normal_10.0":   {"ss": None,  "pose": None, "depth": None, "normal": 10.0},
     # combos
-    "ss5_pose005":   {"ss": 5.0,   "pose": 0.05, "depth": None, "normal": None},
-    "ss5_depth5":    {"ss": 5.0,   "pose": None, "depth": 5.0,  "normal": None},
+    "ss5_pose005":          {"ss": 5.0,  "pose": 0.05, "depth": None, "normal": None},
+    "ss5_depth5":           {"ss": 5.0,  "pose": None, "depth": 5.0,  "normal": None},
+    # pose-anchored combos (best single-guidance scales)
+    "pose_ss":              {"ss": 1.0,  "pose": 0.01, "depth": None, "normal": None},
+    "pose_depth_normal":    {"ss": None, "pose": 0.01, "depth": 1.0,  "normal": 1.0},
+    "pose_ss_depth_normal": {"ss": 1.0,  "pose": 0.01, "depth": 1.0,  "normal": 1.0},
 }
 
 DEFAULT_CONFIGS = [

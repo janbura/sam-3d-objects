@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_eval_combos
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=01:00:00
+#SBATCH --output=logs/sam_eval_combos_%j.out
+
+set -eo pipefail
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || true
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate sam3d-objects
+
+cd "$HOME/sam-3d-objects"
+export LIDRA_SKIP_INIT=1
+
+mkdir -p logs
+
+echo "=== Eval combo configs on combo_17 ==="
+time python -u scripts/eval_sweep.py \
+    --instances misc/combo_17.txt \
+    --configs baseline pose_0.01 pose_ss pose_depth_normal pose_ss_depth_normal \
+    --device cuda
+
+echo "=== Done ==="

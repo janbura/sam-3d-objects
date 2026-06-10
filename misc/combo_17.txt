@@ -1,0 +1,18 @@
+# Stratified combo vibe-check: every 5th from tune_85 (5-bin stratified CD sample)
+frisbee/COCO_train2014_000000381544
+sandwich/COCO_train2014_000000089052
+chair/HICO_train2015_00012508
+sports ball/73ed398151cda1a4
+cup/COCO_train2014_000000386261
+tennis racket/HICO_train2015_00005389
+sports ball/2f9a85f381508472
+chair/0fcecf1f570c235c
+teddy bear/HICO_train2015_00003818
+chair/930fe0c0173b449d
+chair/COCO_val2014_000000106411_0
+handbag/c7fb54c682cc0b56
+umbrella/2372035
+chair/a6c30a4d4a745851
+wine glass/938e3a8874a5e450
+wine glass/ddc37b778ddd3fac
+sports ball/c911e76a5c126183
