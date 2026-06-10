@@ -1,0 +1,69 @@
+#!/bin/bash
+#SBATCH --partition=gpu_h100
+#SBATCH --gpus=1
+#SBATCH --job-name=sam_setup_yml
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=9
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+#SBATCH --output=logs/sam_setup_yml_%j.out
+
+# One-shot setup from environment.yml + GPU compilation of pytorch3d and flash_attn.
+# Run from inside the repo:
+#   sbatch jobs/setup_from_yml.job
+
+set -eo pipefail
+
+module purge
+module load 2023
+module load Anaconda3/2023.07-2
+module load CUDA/12.1.1 2>/dev/null || echo "CUDA module not loaded; relying on conda env"
+
+source "$(conda info --base)/etc/profile.d/conda.sh"
+
+cd "$HOME/sam-3d-objects"
+
+echo "=== GPU ==="
+nvidia-smi
+
+echo "=== Create conda env from environment.yml ==="
+if conda env list | grep -q "^sam3d-objects "; then
+    echo "Env sam3d-objects already exists, skipping create"
+else
+    conda env create -f misc/environment.yml
+fi
+
+conda activate sam3d-objects
+
+echo "=== Python check ==="
+python -c "import torch; print('Torch:', torch.__version__, '| CUDA available:', torch.cuda.is_available(), '| Device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NONE')"
+
+export PIP_EXTRA_INDEX_URL="https://pypi.ngc.nvidia.com https://download.pytorch.org/whl/cu121"
+export PIP_FIND_LINKS="https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.5.1_cu121.html"
+export CUDA_HOME="$(conda info --base)/envs/sam3d-objects"
+
+echo "=== pip install -e .[p3d] (GPU build: pytorch3d + flash_attn) ==="
+pip install -e '.[p3d]'
+
+echo "=== pip install -e .[inference] ==="
+pip install -e '.[inference]'
+
+echo "=== Run hydra patch ==="
+chmod +x ./patching/hydra
+./patching/hydra
+
+echo "=== Verify PyTorch3D compiled WITH CUDA ==="
+python - <<'PYEOF'
+import sys, torch, pytorch3d
+from pytorch3d.ops import knn_points
+print("pytorch3d:", pytorch3d.__version__)
+if not torch.cuda.is_available():
+    sys.exit("ERROR: CUDA not available")
+pts = torch.rand(1, 128, 3, device="cuda")
+out = knn_points(pts, pts, K=8)
+torch.cuda.synchronize()
+print("pytorch3d CUDA op OK:", out.idx.device)
+import flash_attn; print("flash_attn:", flash_attn.__version__)
+PYEOF
+
+echo "=== setup_from_yml DONE ==="
